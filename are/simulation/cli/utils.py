@@ -260,6 +260,7 @@ def _create_and_initialize_scenario(
 def run_scenarios_by_id(
     config: MultiScenarioRunnerConfig,
     scenario_ids: list[str],
+    num_runs: int = 1,
 ) -> MultiScenarioValidationResult:
     from are.simulation.scenarios.utils.constants import ALL_SCENARIOS
 
@@ -307,6 +308,18 @@ def run_scenarios_by_id(
             logger.error(f"Failed to load scenario {id}: {e}")
             raise ValueError(f"Failed to load scenario {id}: {e}") from e
 
+    # If multiple runs requested, duplicate scenarios and set run_number
+    if num_runs and num_runs > 1:
+        import copy
+
+        multiplied: list[Scenario] = []
+        for scenario in scenarios:
+            for run_num in range(1, num_runs + 1):
+                sc = copy.deepcopy(scenario)
+                sc.run_number = run_num
+                multiplied.append(sc)
+        scenarios = multiplied
+
     runner = MultiScenarioRunner()
     return runner.run(config, scenarios)
 
@@ -314,6 +327,7 @@ def run_scenarios_by_id(
 def run_scenarios_by_json_files(
     config: MultiScenarioRunnerConfig,
     json_file_paths: list[str],
+    num_runs: int = 1,
 ) -> MultiScenarioValidationResult:
     from are.simulation.scenarios.utils.load_utils import load_scenario
 
@@ -340,6 +354,18 @@ def run_scenarios_by_json_files(
             logger.error(f"Failed to load scenario from {json_path}: {e}")
             raise ValueError(f"Failed to load scenario from {json_path}: {e}") from e
 
+    # If multiple runs requested, duplicate scenarios and set run_number
+    if num_runs and num_runs > 1:
+        import copy
+
+        multiplied: list[Scenario] = []
+        for scenario in scenarios:
+            for run_num in range(1, num_runs + 1):
+                sc = copy.deepcopy(scenario)
+                sc.run_number = run_num
+                multiplied.append(sc)
+        scenarios = multiplied
+
     runner = MultiScenarioRunner()
     return runner.run(config, scenarios)
 
@@ -347,6 +373,7 @@ def run_scenarios_by_json_files(
 def run_scenarios_by_huggingface_urls(
     config: MultiScenarioRunnerConfig,
     hf_urls: list[str],
+    num_runs: int = 1,
 ) -> MultiScenarioValidationResult:
     """
     Run scenarios from HuggingFace dataset URLs.
@@ -400,6 +427,18 @@ def run_scenarios_by_huggingface_urls(
         except Exception as e:
             logger.error(f"Failed to load scenario from {hf_url}: {e}")
             raise ValueError(f"Failed to load scenario from {hf_url}: {e}") from e
+
+    # If multiple runs requested, duplicate scenarios and set run_number
+    if num_runs and num_runs > 1:
+        import copy
+
+        multiplied: list[Scenario] = []
+        for scenario in scenarios:
+            for run_num in range(1, num_runs + 1):
+                sc = copy.deepcopy(scenario)
+                sc.run_number = run_num
+                multiplied.append(sc)
+        scenarios = multiplied
 
     runner = MultiScenarioRunner()
     return runner.run(config, scenarios)

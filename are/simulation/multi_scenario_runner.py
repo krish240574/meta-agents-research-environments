@@ -141,6 +141,8 @@ def _create_scenario_runner_config(
         a2a_app_prop=config.a2a_app_prop,
         a2a_app_agent=config.a2a_app_agent,
         a2a_model=config.a2a_model,
+        a2a_model_provider=config.a2a_model_provider,
+        a2a_endpoint=config.a2a_endpoint,
         simulated_generation_time_mode=config.simulated_generation_time_mode,
         use_custom_logger=config.use_custom_logger,
         tool_augmentation_config=config.tool_augmentation_config,

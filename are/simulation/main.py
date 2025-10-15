@@ -24,6 +24,9 @@ from are.simulation.cli.utils import (
 )
 from are.simulation.scenarios.config import MultiScenarioRunnerConfig
 from are.simulation.utils.huggingface import parse_huggingface_url
+from are.simulation.agents.agent_builder import AppAgentBuilder
+from are.simulation.config import PROVIDERS
+from are.simulation.utils import DEFAULT_APP_AGENT
 
 
 def validate_main_scenario_sources(**scenario_params):
@@ -130,6 +133,46 @@ def validate_main_scenario_sources(**scenario_params):
 )
 @output_config_options()
 @click.option(
+    "--a2a_app_prop",
+    type=click.FloatRange(0.0, 1.0),
+    default=0,
+    help="When >0, enable Agent2Agent mode for a fraction of Apps per scenario.",
+)
+@click.option(
+    "--a2a_app_agent",
+    type=click.Choice(AppAgentBuilder().list_agents()),
+    required=False,
+    default=DEFAULT_APP_AGENT,
+    help="[Agent2Agent] Agent used for App agent instances.",
+)
+@click.option(
+    "--a2a_model",
+    type=str,
+    required=False,
+    default=None,
+    help="[Agent2Agent] Model used for App agent instances.",
+)
+@click.option(
+    "--a2a_model_provider",
+    type=click.Choice(PROVIDERS),
+    required=False,
+    default=None,
+    help="[Agent2Agent] Provider of the App agent model.",
+)
+@click.option(
+    "--a2a_endpoint",
+    type=str,
+    required=False,
+    help="[Agent2Agent] Endpoint URL for App agent model.",
+)
+@click.option(
+    "-r",
+    "--num_runs",
+    type=int,
+    default=1,
+    help="Repeat each scenario N times (sets run_number in outputs).",
+)
+@click.option(
     "-e",
     "--export",
     is_flag=True,
@@ -163,6 +206,12 @@ def main(
     multi_kwargs: str = "[{}]",
     scenario_kwargs: str = "{}",
     multi_scenario_kwargs: str = "[{}]",
+    a2a_app_prop: float = 0,
+    a2a_app_agent: str = "",
+    a2a_model: str | None = None,
+    a2a_model_provider: str | None = None,
+    a2a_endpoint: str | None = None,
+    num_runs: int = 1,
     # Main-specific scenario parameters
     scenario_id: list[str] | None = None,
     scenario_file: list[str] | None = None,
@@ -233,21 +282,28 @@ def main(
         tool_augmentation_config=tool_augmentation_config,
         env_events_config=env_events_config,
         enable_caching=False,
+        a2a_app_prop=a2a_app_prop,
+        a2a_app_agent=a2a_app_agent,
+        a2a_model=a2a_model,
+        a2a_model_provider=a2a_model_provider,
+        a2a_endpoint=a2a_endpoint,
     )
 
     # Run scenarios by ID
     if final_scenario_id:
-        run_scenarios_by_id(runner_config, final_scenario_id)
+        run_scenarios_by_id(runner_config, final_scenario_id, num_runs=num_runs)
         return
 
     # Run scenarios by JSON file
     if final_json_file:
-        run_scenarios_by_json_files(runner_config, final_json_file)
+        run_scenarios_by_json_files(runner_config, final_json_file, num_runs=num_runs)
         return
 
     # Run scenarios by HuggingFace URL
     if final_hf_url:
-        run_scenarios_by_huggingface_urls(runner_config, final_hf_url)
+        run_scenarios_by_huggingface_urls(
+            runner_config, final_hf_url, num_runs=num_runs
+        )
         return
 
 
