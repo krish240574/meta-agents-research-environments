@@ -101,18 +101,13 @@ class BaseActionExecutor:
 
     def _append_final_answer(
         self,
-        observation: MMObservation | str,
+        observation: MMObservation | str | object,
         append_agent_log: Callable[[BaseAgentLog], None],
         make_timestamp: Callable[[], float],
         agent_id: str,
     ):
-        if isinstance(observation, str):
-            append_agent_log(
-                FinalAnswerLog(
-                    content=observation, timestamp=make_timestamp(), agent_id=agent_id
-                )
-            )
-        else:
+        # Handle multimodal observation first
+        if isinstance(observation, MMObservation):
             append_agent_log(
                 FinalAnswerLog(
                     content=observation.content,
@@ -121,3 +116,17 @@ class BaseActionExecutor:
                     agent_id=agent_id,
                 )
             )
+            return
+
+        # Coerce non-MMObservation results to string content
+        if not isinstance(observation, str):
+            try:
+                import json as _json
+
+                observation = _json.dumps(observation, ensure_ascii=False)
+            except Exception:
+                observation = str(observation)
+
+        append_agent_log(
+            FinalAnswerLog(content=observation, timestamp=make_timestamp(), agent_id=agent_id)
+        )
