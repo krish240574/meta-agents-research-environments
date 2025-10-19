@@ -106,6 +106,7 @@ Action:
 - Only ONE tool call per Action.
 - Always return a valid JSON object (no Markdown, no extra text, no comments).
 - Use real values, not placeholders.
+- Do not pass schema-like objects for inputs (e.g., {"content": {"type": "string", "description": "..."}}). Always pass literal values (e.g., {"content": "..."}).
 - If a tool takes no input, pass an empty dictionary: {{}}.
 - For booleans, use true/false in lowercase.
 - Always end with <end_action> immediately after the JSON.

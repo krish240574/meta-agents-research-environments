@@ -15,8 +15,12 @@ from are.simulation.tools import Tool
 
 DEFAULT_TOOL_DESCRIPTION_TEMPLATE = """
 - {{ tool.name }}: {{ tool.description }}
-    Takes inputs: {{tool.inputs}}
+    Inputs:
+{% for name, spec in tool.inputs.items() -%}
+    - {{ name }}: {{ spec["type"] }}
+{%- endfor %}
     Returns an output of type: {{tool.output_type}}
+    Note: pass literal values, not schema objects. For example, use {"content": "text"} not {"content": {"type": "string", "description": "text"}}.
 """
 
 

@@ -203,6 +203,26 @@ class JsonActionExecutor(BaseActionExecutor):
         tool_name = parsed_action.tool_name
         arguments = parsed_action.arguments if parsed_action.arguments else {}
 
+        # Normalize common schema-like argument values that models sometimes copy from
+        # tool descriptions (e.g., {"type": "string", "description": "..."}) into
+        # plain literal values expected by tools (e.g., "...").
+        def _normalize_args(args):
+            if isinstance(args, dict):
+                normalized = {}
+                for k, v in args.items():
+                    if (
+                        isinstance(v, dict)
+                        and v.get("type") == "string"
+                        and isinstance(v.get("description"), str)
+                    ):
+                        normalized[k] = v["description"]
+                    else:
+                        normalized[k] = v
+                return normalized
+            return args
+
+        arguments = _normalize_args(arguments)
+
         if tool_name == "_mock":
             return "Mocked observation"
 
