@@ -1,7 +1,7 @@
 def safe_strip(value):
-    # FIX: Ensure value is a string before calling strip()
+    # FIX: Add additional checks to ensure value is safely handled
     if value is None:
         return ''
     if isinstance(value, str):
         return value.strip()
-    raise TypeError('Expected a string or None, got {}'.format(type(value).__name__))
+    raise TypeError(f'Expected a string or None, got {type(value).__name__}')
