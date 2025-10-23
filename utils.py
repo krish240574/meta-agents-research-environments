@@ -1,5 +1,5 @@
 def safe_strip(value):
-    # FIX: Ensure value is a string before calling strip()
+    # FIX: Return an empty string for None and handle unexpected types
     if value is None:
         return ''
     if isinstance(value, str):
