@@ -1,5 +1,5 @@
-def safe_strip(value: Optional[str]) -> str:
-    # FIX: Handle NoneType to avoid AttributeError
+def safe_strip(value):
+    # FIX: Ensure value is not None before calling strip()
     if value is None:
         return ''
-    return value.strip()
+    return value.strip() if isinstance(value, str) else value
