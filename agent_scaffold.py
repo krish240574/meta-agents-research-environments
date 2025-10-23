@@ -1,16 +1,11 @@
-class AgentScaffold:
-    def __init__(self, agent_type: str):
-        self.agent_type = agent_type
-        # FIX: Support alternative agent scaffolds
-        self.agent = self.create_agent(agent_type)
-
-    def create_agent(self, agent_type: str):
-        if agent_type == 'default':
-            return DefaultAgent()
-        elif agent_type == 'alternative':
-            return AlternativeAgent()
-        else:
-            raise ValueError(f'Unsupported agent type: {agent_type}')
-    
-    def perform_action(self):
-        return self.agent.perform_action()
+def register_agent_scaffold(scaffold):
+    # Existing registration logic...
+    if scaffold is None:
+        raise ValueError("Scaffold cannot be None")  # FIX: Prevent NoneType registration
+    if not isinstance(scaffold, BaseAgentScaffold):
+        raise ValueError("Invalid scaffold type, must extend BaseAgentScaffold")
+    # Check if the scaffold is already registered
+    if scaffold in agent_scaffolds:
+        raise ValueError("Scaffold already registered")  # FIX: Prevent duplicate registration
+    agent_scaffolds.append(scaffold)
+    # ... (rest of the function) ...
