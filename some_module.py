@@ -1,0 +1,3 @@
+def process_input(input_value):
+    cleaned_value = safe_strip(input_value)  # Ensure input_value is safely stripped
+    # ... (rest of the function) ...
