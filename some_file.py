@@ -1,5 +1,5 @@
 def some_function(some_string):
-    # Ensure some_string is not None before calling strip
-    if some_string is None:
+    # Handle NoneType and ensure some_string is a string before calling strip
+    if not isinstance(some_string, str):
         return ""
-    return some_string.strip() if isinstance(some_string, str) else ""
+    return some_string.strip()
