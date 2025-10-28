@@ -5,5 +5,4 @@ class Scenario:
 
     def to_json(self) -> str:
         return json.dumps(self.__dict__)  # Convert scenario object to JSON
-
     # ... (rest of class) ...
