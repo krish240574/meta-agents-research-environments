@@ -1,11 +1,5 @@
-def register_agent_scaffold(scaffold):
-    # Existing registration logic...
-    if scaffold is None:
-        raise ValueError("Scaffold cannot be None")  # FIX: Prevent NoneType registration
-    if not isinstance(scaffold, BaseAgentScaffold):
-        raise ValueError("Invalid scaffold type, must extend BaseAgentScaffold")
-    # Check if the scaffold is already registered
-    if scaffold in agent_scaffolds:
-        raise ValueError("Scaffold already registered")  # FIX: Prevent duplicate registration
-    agent_scaffolds.append(scaffold)
-    # ... (rest of the function) ...
+def support_alternative_agents(agent_type: str, *args, **kwargs):
+    # ... (existing code) ...
+    if agent_type not in supported_agents:
+        raise ValueError(f"Unsupported agent type: {agent_type}")  # FIX: Support for alternative agent scaffolds
+    # ... (rest of function) ...
