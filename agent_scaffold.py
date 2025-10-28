@@ -1,5 +1,5 @@
-def support_alternative_agents(agent_type: str, *args, **kwargs):
+def support_alternative_scaffolds(agent_type: str) -> None:
     # ... (existing code) ...
-    if agent_type not in supported_agents:
-        raise ValueError(f"Unsupported agent type: {agent_type}")  # FIX: Support for alternative agent scaffolds
+    if agent_type not in SUPPORTED_AGENTS:
+        raise ValueError(f"Agent type '{agent_type}' is not supported.")
     # ... (rest of function) ...
