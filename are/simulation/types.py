@@ -19,13 +19,35 @@ from dataclasses import dataclass, field
 from enum import Enum
 from functools import wraps
 from types import MethodType
-from typing import TYPE_CHECKING, Any, Callable, Literal
+from typing import Any, Callable, Literal, TYPE_CHECKING
 
-import strawberry
+# Optional strawberry import for GraphQL support
+# When strawberry is not installed, we use no-op decorators
+try:
+    import strawberry
+
+    HAS_STRAWBERRY = True
+except ImportError:
+    HAS_STRAWBERRY = False
+
+    # Create no-op decorators when strawberry is not available
+    class _StrawberryStub:
+        @staticmethod
+        def enum(cls):
+            """No-op decorator when strawberry is not available"""
+            return cls
+
+        @staticmethod
+        def type(cls):
+            """Decorator that converts class to dataclass when strawberry is not available"""
+            # Apply dataclass decorator to provide __init__ method
+            return dataclass(cls)
+
+    strawberry = _StrawberryStub()  # type: ignore
 
 from are.simulation.priority_queue import PriorityQueue
 from are.simulation.time_manager import TimeManager
-from are.simulation.tool_utils import APPTOOL_ATTR_NAME, AppTool, OperationType
+from are.simulation.tool_utils import AppTool, APPTOOL_ATTR_NAME, OperationType
 from are.simulation.utils import conditional_context_manager, get_function_name
 
 if TYPE_CHECKING:
