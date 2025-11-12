@@ -91,7 +91,7 @@ jobs:
       - uses: ./.github/actions/setup-python-uv
       - name: Run Python typing checks
         working-directory: ${{ env.WORKING_DIR }}
-        run: uv run --extra dev pyright
+        run: uv run --extra dev --extra gui pyright
 
   python-tests:
     runs-on: ubuntu-latest
@@ -144,4 +144,4 @@ jobs:
       # ok, now we can run the tests
       - name: Run Python tests
         working-directory: ${{ env.WORKING_DIR }}
-        run: uv run --extra dev pytest -v --full-trace --pyargs are.simulation
+        run: uv run --extra dev --extra gui pytest -v --full-trace --pyargs are.simulation
