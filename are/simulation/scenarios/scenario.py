@@ -1,7 +1,14 @@
 import json
 
 class Scenario:
-    # ... (existing attributes and methods) ...
+    def __init__(self, name, description, steps):
+        self.name = name
+        self.description = description
+        self.steps = steps
 
     def to_json(self):
-        return json.dumps(self.__dict__)  # Convert scenario object to JSON
+        return json.dumps({
+            'name': self.name,
+            'description': self.description,
+            'steps': self.steps
+        })
