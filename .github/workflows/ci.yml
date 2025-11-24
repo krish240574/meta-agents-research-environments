@@ -1,13 +1,21 @@
- name: CI
+name: CI
 
   on:
+    # Needed so TestRunnerToolGroup.run_tests can trigger this via the GitHub API
+    workflow_dispatch:
+      inputs:
+        issue_identifier:
+          description: "Issue or PR identifier (optional, used by external tools)"
+          required: false
+          default: ""
+
     push:
       branches:
         - main
         - "feature/*"
         - "fix/*"
+
     pull_request:
-    workflow_dispatch: {}
 
   jobs:
     tests:
@@ -20,13 +28,25 @@
         - name: Set up Python
           uses: actions/setup-python@v5
           with:
+            # Adjust if your project uses another version
             python-version: "3.11"
 
         - name: Install dependencies
           run: |
-            pip install -r requirements.txt
+            python -m pip install --upgrade pip
+            if [ -f requirements.txt ]; then
+              pip install -r requirements.txt
+            elif [ -f pyproject.toml ]; then
+              pip install poetry
+              poetry install
+            else
+              echo "No requirements.txt or pyproject.toml found; skipping dependency install."
+            fi
 
         - name: Run tests
           run: |
-            pytest
+            if [ -f pyproject.toml ]; then
+              poetry run pytest
+            else
+              pytest
 
