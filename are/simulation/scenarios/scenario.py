@@ -1,7 +1,10 @@
 import json
 
 class Scenario:
-    # ... (existing attributes and methods) ...
+    # ... (existing code) ...
 
-    def to_json(self) -> str:
-        return json.dumps(self.__dict__)  # Convert scenario attributes to JSON
+    def to_json(self):
+        # Converts scenario attributes to a JSON serializable format
+        return json.dumps(self.__dict__)
+
+    # ... (rest of class) ...
